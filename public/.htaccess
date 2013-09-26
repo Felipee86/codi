@@ -1,0 +1,10 @@
+SetEnv APPLICATION_ENV development
+DirectoryIndex index.php
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} -s [OR]
+RewriteCond %{REQUEST_FILENAME} -l [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+#wszystkie skrypty
+RewriteRule ^.*$ - [NC,L]
+#zdefiniowane
+RewriteRule ^.*$ index.php [NC,L]

@@ -1,0 +1,51 @@
+/*
+    Document   : component
+    Created on : 2013-07-01, 19:18:22
+    Author     : Felipee
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+div.socket_container {
+  display: block;
+}
+
+div.component div {
+  padding: 5px;
+}
+
+div.component_content {
+  border: 3px solid #757475;
+  -webkit-border-radius: 10px;
+  -webkit-border-top-left-radius: 0;
+  -moz-border-radius: 10px;
+  -moz-border-radius-topleft: 0;
+  border-radius: 10px;
+  border-top-left-radius: 0;
+}
+
+div.component_label {
+  padding: 1px 7px 1px 7px !important;
+  display: inline-block;
+  width: 0 auto;
+  font-weight: bold;
+  font-size: 0.8em;
+  background: #757475 url('../img/panel_bg.png');
+  color: #fff;
+  -webkit-border-radius: 10px;
+  -webkit-border-bottom-left-radius: 0;
+  -webkit-border-bottom-right-radius: 0;
+  -moz-border-radius: 10px;
+  -moz-border-radius-bottomleft: 0;
+  -moz-border-radius-bottomright: 0;
+  border-radius: 10px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+#socket_LoginPanel {
+  float: right;
+  margin: 10px;
+  width: 150px;
+}
+
