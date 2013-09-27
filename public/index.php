@@ -1,12 +1,13 @@
 <?php
 require_once '../booter.php';
+require_once '../autoloader.php';
 
 /** Codi_Application */
-require_once 'Codi/Application.php';
+//require_once 'Codi/Application.php';
 
-$_ENV['APPLICATION_ENV'] = Conf::getValue('codi.enviroment');
+$_ENV['APPLICATION_ENV'] = Codi\Conf::getValue('codi.enviroment');
 
 // Create application and run
-$application = new Codi_Application();
+$application = new Codi\Application();
 $application->start();
 $application->onFinish();

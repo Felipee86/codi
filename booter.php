@@ -1,10 +1,11 @@
 <?php
-
 // Define path to application directory
 defined('APPLICATION_PATH')
   || define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/application'));
 
 define('CONFIG_PATH', realpath(dirname(__FILE__)) . '/config');
+
+define('CORE_PATH', realpath(dirname(__FILE__)) . '/core');
 
 define('HTML_PATH', realpath(dirname(__FILE__)) . '/public');
 
@@ -14,6 +15,7 @@ defined('APPLICATION_ENV')
 $handle = opendir(realpath(APPLICATION_PATH));
 $MODULES = array();
 $MODULES[] = get_include_path();
+$MODULES[] = CORE_PATH;
 while (false !== ($dir = readdir($handle))) {
   $sdir = APPLICATION_PATH . DIRECTORY_SEPARATOR . $dir . DIRECTORY_SEPARATOR;
   if ($dir != "." && $dir != ".." && is_dir($sdir)) {
@@ -28,7 +30,5 @@ set_include_path(implode(PATH_SEPARATOR, $MODULES));
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
-require_once 'Conf.php';
-require_once 'Dbi.php';
 require_once 'Error.php';
 require_once 'Lang.php';
