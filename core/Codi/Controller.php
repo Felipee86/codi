@@ -8,11 +8,11 @@
  */
 
 use Rendus\Html;
+use Rendus\Layout\LayoutAbstract;
 use Codi\Controller\ControllerAbstract;
-use Codi\DataBase as Db;
+use Codi\DataBase as Dbi;
 use Codi\DataCase;
 use Codi\Error;
-use Codi\Loader;
 use Codi\User;
 
 class Controller extends ControllerAbstract {
@@ -55,8 +55,6 @@ class Controller extends ControllerAbstract {
 
   public function __construct($action = 'index')
   {
-    $this->db = Db::factory();
-
     $this->_loadUser();
 
     if (strpos($action, 'ajax') === 0) {
@@ -79,7 +77,7 @@ class Controller extends ControllerAbstract {
 
   public final function run()
   {
-    if ($this->isRendus && Loader::loadLayout($this->AConfig['layout_class'], Request::getModule())) {
+    if ($this->isRendus) {
       $this->ORendus = new $this->AConfig['layout_class'];
     }
 
@@ -113,26 +111,12 @@ class Controller extends ControllerAbstract {
     return $AOptions;
   }
 
-  protected final function setContent($MContent)
+  protected final function setContent($content)
   {
-    $OContent = $this->_getContent($MContent);
+    $class = "\\" . $content;
+    $OContent = new $class();
 
     $this->ORendus->setContent($OContent);
-  }
-
-  private function _getContent($MContent)
-  {
-    if ($MContent instanceof Content) {
-      $OContent = $MContent;
-    }
-    else {
-      $OContent = Loader::loadContent((string)$MContent);
-      if (!$OContent) {
-        Error::throwError('Niewlasciwa nazwa klasy');
-      }
-    }
-
-    return $OContent;
   }
 
   public function setNoRendus()
@@ -165,10 +149,10 @@ class Controller extends ControllerAbstract {
             " . self::CONTROLLER_ACTION_TABLE . " cca ON
               cc.id = cca.id_codi_controller
           JOIN
-            " . Rendus_Layout_Abstract::LAYOUT_TABLE . " rll ON
+            " . LayoutAbstract::LAYOUT_TABLE . " rll ON
               rll.id = default_layout_id_rendus_layout
           JOIN
-            " . Rendus_Layout_Abstract::LAYOUT_TABLE . " rlc ON
+            " . LayoutAbstract::LAYOUT_TABLE . " rlc ON
               rlc.id = default_content_id_rendus_layout
           WHERE
             cc.module = ?
@@ -176,7 +160,8 @@ class Controller extends ControllerAbstract {
             AND cca.name = ?
           ";
 
-    $this->AConfig = $this->db->fetchRow($q, array(
+    $db = Dbi::factory();
+    $this->AConfig = $db->fetchRow($q, array(
         $this->module,
         $this->name,
         $this->action

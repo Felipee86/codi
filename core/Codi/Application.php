@@ -9,7 +9,7 @@
 
 use Codi\Request;
 use Codi\Error;
-use Zend\Session\SessionManager as Session;
+use Codi\Session;
 
 class Application {
 
@@ -18,27 +18,16 @@ class Application {
 
   public function __construct()
   {
-    if (!Session::sessionExists()) {
-      Session::start();
-    }
+    Session::start();
 
     $REQUEST = Request::getRequestData();
 
-    $filePath = APPLICATION_PATH . DIRECTORY_SEPARATOR . $REQUEST['FrontController']['module']
-                . '/controller/' . $REQUEST['FrontController']['controller'] . '.php';
+    $class = ucfirst($REQUEST['FrontController']['module'])
+            . '\\'
+            . ucfirst($REQUEST['FrontController']['controller'])
+            . 'Controller';
 
-    if (file_exists($filePath)) {
-      require_once $filePath;
-      $class = ucfirst($REQUEST['FrontController']['module'])
-              . '\\'
-              . ucfirst($REQUEST['FrontController']['controller'])
-              . 'Controller';
-
-      $this->OFrontController = new $class($REQUEST['FrontController']['action']);
-    }
-    else {
-      Error::throwError('Nie odnaleziono klasy kontrollera');
-    }
+    $this->OFrontController = new $class($REQUEST['FrontController']['action']);
 
     $this->AOptions = $REQUEST['Options'];
   }

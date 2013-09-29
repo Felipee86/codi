@@ -1,10 +1,11 @@
 <?php
 return [
-    'routs' => [
-        'default' => [
+    'default' => [
             'module'     => 'center',
             'controller' => 'home',
             'action'     => 'index'
         ],
+    'routs' => [
+
     ]
 ];

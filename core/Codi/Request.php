@@ -13,8 +13,10 @@ class Request {
 
   const MAIN_MODULE = 'center';
 
-  private static $AFront_controller = [];
-  private static $AOptions = [];
+  private static $_AFront_ctrl = [];
+  private static $_AOptions    = [];
+  private static $_AConfig     = [];
+  private static $_ADefault    = [];
 
   public static function getUri()
   {
@@ -43,8 +45,18 @@ class Request {
     return $REQUEST;
   }
 
+  private static function _loadConfig()
+  {
+    $ARouts = Conf::getConfig('routing');
+    self::$_AConfig  = $ARouts['routs'];
+    self::$_ADefault = $ARouts['default'];
+
+  }
+
   private static function _loadUrlData()
   {
+    self::_loadConfig();
+
     $REQUEST_URI = explode('/', trim($_SERVER['REQUEST_URI'], '/'));
     $SCRIPT_NAME = explode('/', trim($_SERVER['SCRIPT_NAME'], '/'), -1);
 
@@ -66,76 +78,76 @@ class Request {
     $REQUEST = self::_validateRequest($REQUEST);
 
     if (isset($REQUEST[0])) {
-      self::$AFront_controller['module'] = $REQUEST[0];
+      self::$_AFront_ctrl['module'] = strtolower($REQUEST[0]);
       if (isset($REQUEST[1])) {
-        self::$AFront_controller['controller'] = $REQUEST[1];
+        self::$_AFront_ctrl['controller'] = strtolower($REQUEST[1]);
         if (isset($REQUEST[2])) {
-          self::$AFront_controller['action'] = $REQUEST[2];
+          self::$_AFront_ctrl['action'] = strtolower($REQUEST[2]);
           if (isset($REQUEST[3])) {
             foreach (explode(',', $REQUEST[3]) as $option) {
               $O = explode('=', $option);
               if (isset($O[1])) {
                 $ARR = explode(';', $O[1]);
                 if (count($ARR) > 1) {
-                  self::$AOptions[$O[0]] = $ARR;
+                  self::$_AOptions[$O[0]] = $ARR;
                 }
                 else {
-                  self::$AOptions[$O[0]] = $O[1];
+                  self::$_AOptions[$O[0]] = $O[1];
                 }
               }
               else {
-                self::$AOptions[$O[0]] = true;
+                self::$_AOptions[$O[0]] = true;
               }
             }
           }
         }
         else {
-          self::$AFront_controller['action'] = Conf::getValue(self::$AFront_controller['module'] . '.default.action');
+          self::$_AFront_ctrl['action'] = self::$_AConfig[self::$_AFront_ctrl['module']]['action'];
         }
       }
       else {
-        self::$AFront_controller['controller'] = Conf::getValue(self::$AFront_controller['module'] . '.default.controller');
-        self::$AFront_controller['action']     = Conf::getValue(self::$AFront_controller['module'] . '.default.action');
+        self::$_AFront_ctrl['controller'] = self::$_AConfig[self::$_AFront_ctrl['module']]['controller'];
+        self::$_AFront_ctrl['action']     = self::$_AConfig[self::$_AFront_ctrl['module']]['action'];
       }
     }
     else {
-      self::$AFront_controller['module']      = self::MAIN_MODULE;
-      self::$AFront_controller['controller']  = Conf::getValue('codi.default.controller');
-      self::$AFront_controller['action']      = Conf::getValue('codi.default.action');
+      self::$_AFront_ctrl['module']      = self::$_ADefault['module'];
+      self::$_AFront_ctrl['controller']  = self::$_ADefault['controller'];
+      self::$_AFront_ctrl['action']      = self::$_ADefault['action'];
     }
   }
 
   public static function getRequestData()
   {
-    if (empty(self::$AFront_controller)) {
+    if (empty(self::$_AFront_ctrl)) {
       self::_loadUrlData();
     }
-    return ['FrontController' => self::$AFront_controller,
-            'Options'         => self::$AOptions];
+    return ['FrontController' => self::$_AFront_ctrl,
+            'Options'         => self::$_AOptions];
   }
 
   public static function getModule()
   {
-    if (empty(self::$AFront_controller)) {
+    if (empty(self::$_AFront_ctrl)) {
       self::_loadUrlData();
     }
-    return self::$AFront_controller['module'];
+    return self::$_AFront_ctrl['module'];
   }
 
   public static function getController()
   {
-    if (empty(self::$AFront_controller)) {
+    if (empty(self::$_AFront_ctrl)) {
       self::_loadUrlData();
     }
-    return self::$AFront_controller['controller'];
+    return self::$_AFront_ctrl['controller'];
   }
 
   public static function getAction()
   {
-    if (empty(self::$AFront_controller)) {
+    if (empty(self::$_AFront_ctrl)) {
       self::_loadUrlData();
     }
-    return self::$AFront_controller['action'];
+    return self::$_AFront_ctrl['action'];
   }
 
   public static function getPost()

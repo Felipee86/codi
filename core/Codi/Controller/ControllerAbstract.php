@@ -7,6 +7,8 @@
  * @author Filip Koblsnski
  */
 
+use Codi\DataBase as Dbi;
+
 abstract class ControllerAbstract {
 
   const CONTROLLER_TABLE = 'codi_controller';
@@ -20,7 +22,7 @@ abstract class ControllerAbstract {
 
   /**
    * Database adapter handler
-   * @var Zend\Db\Adapter
+   * @var Zend\Db\Adapter\Adapter
    */
   protected $db;
 

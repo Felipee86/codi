@@ -7,8 +7,7 @@
  * @author Filip Koblsnski
  */
 
-require_once 'Rendus/RendusInterface.php';
-
+use Codi\DataBase as Dbi;
 use Codi\Error;
 use Codi\Loader;
 use Codi\Request;
@@ -51,12 +50,14 @@ abstract class LayoutAbstract implements RendusInterface
 
   protected $_appPath = '';
 
-  protected $db;
+  /**
+   * Does layout accepts the flash messages.
+   * @var Boolean
+   */
+  protected $flashMsg = false;
 
   public function __construct()
   {
-    $this->db = Dbi::factory();
-
     $this->loadConfig();
     $this->loadSockets();
   }
@@ -78,6 +79,8 @@ abstract class LayoutAbstract implements RendusInterface
 
   private function loadConfig()
   {
+    $db = Dbi::factory();
+
     $q = "SELECT
             id,
             module,
@@ -87,7 +90,7 @@ abstract class LayoutAbstract implements RendusInterface
             rendus_layout
           WHERE
             classname = ?";
-    $AConfig = $this->db->fetchRow($q, array(get_class($this)));
+    $AConfig = $db->fetchRow($q, array(get_class($this)));
 
     $this->id = $AConfig['id'];
     $this->name = get_class($this);
@@ -108,6 +111,8 @@ abstract class LayoutAbstract implements RendusInterface
 
   private function loadSockets()
   {
+    $db = Dbi::factory();
+
     $q = "
           SELECT
             rs.name,
@@ -120,7 +125,7 @@ abstract class LayoutAbstract implements RendusInterface
           WHERE
             rs.id_rendus_layout = ?
           ";
-    $ASockets = $this->db->fetchAll($q, array($this->id));
+    $ASockets = $db->fetchAll($q, array($this->id));
 
     foreach ($ASockets as $ASocket) {
       if (Loader::loadClass($ASocket['component_class'])) {

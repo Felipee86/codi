@@ -12,23 +12,5 @@ define('HTML_PATH', realpath(dirname(__FILE__)) . '/public');
 defined('APPLICATION_ENV')
   || define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : 'production'));
 
-$handle = opendir(realpath(APPLICATION_PATH));
-$MODULES = array();
-$MODULES[] = get_include_path();
-$MODULES[] = CORE_PATH;
-while (false !== ($dir = readdir($handle))) {
-  $sdir = APPLICATION_PATH . DIRECTORY_SEPARATOR . $dir . DIRECTORY_SEPARATOR;
-  if ($dir != "." && $dir != ".." && is_dir($sdir)) {
-      $MODULES[] = $sdir . "logic";
-  }
-}
-closedir($handle);
-
-// Ensure all logic is on include_path
-set_include_path(implode(PATH_SEPARATOR, $MODULES));
-
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
-
-require_once 'Error.php';
-require_once 'Lang.php';

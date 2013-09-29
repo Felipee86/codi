@@ -1,4 +1,4 @@
-<?php
+<?php namespace Codi;
 
 /**
  * Class Error of
@@ -7,7 +7,8 @@
  * @author Filip Koblsnski
  */
 
-class Error {
+class Error
+{
 
   private static $AMsgs = [];
 
@@ -24,7 +25,6 @@ class Error {
         self::$AMsgs = [];
       }
     }
-
   }
 
   public static function throwError($msg)
@@ -36,9 +36,8 @@ class Error {
     if (!empty(self::$AMsgs)) {
       header('Content-type: text/html');
       if ($_ENV['APPLICATION_ENV'] == 'development') {
-        require_once 'Zend/Exception.php';
         echo '<pre>';
-        throw new Zend_Exception(implode('<br />', self::$AMsgs));
+        throw new \Exception(implode('<br />', self::$AMsgs));
       }
       else {
         foreach (self::$AMsgs as $msg) {
@@ -49,7 +48,5 @@ class Error {
         exit();
       }
     }
-
   }
-
 }

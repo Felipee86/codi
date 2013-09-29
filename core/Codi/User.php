@@ -9,11 +9,11 @@
 
 use Codi\Activation;
 use Codi\Date;
+use Codi\DataBase as Db;
 use Codi\Error;
 use Codi\Msg;
 use Codi\User;
-use Zend\Authentication\AuthenticationService as Auth;
-use Zend\SessionManager as Session;
+use Codi\User\Authenticator as Auth;
 
 class User
 {
@@ -23,16 +23,66 @@ class User
 
   private $_AUserInfo = [];
 
+  private $_ARemoteInfo = [];
+
   protected function __construct()
   {
-    $this->_OAuth = Auth::getInstance();
+    $this->_OAuth = new Auth();
 
-    $ASess_Options = Session::getOptions();
-    if (!empty($ASess_Options['user_name'])) {
+    $this->_ARemoteInfo = $this->_getRemoteInfo();
+
+    if (Session::getValue('user_name')) {
       $db = Db::factory();
-      $q = $db->select()->from('acl_user')->where('name = ?', $ASess_Options['user_name']);
+      $q = $db->select()->from('acl_user')
+                ->where('name                 = ?', Session::getValue('user_name'))
+                ->where('session_id           = ?', Session::getId())
+                ->where('session_ip           = ?', $this->_ARemoteInfo['ip'])
+                ->where('session_hash_browser = ?', $this->_ARemoteInfo['hash_browser']);
       $this->_AUserInfo = $db->fetchAll($q);
     }
+  }
+
+  private function _getRemoteInfo()
+  {
+    $ARemoteInfo = [];
+
+    $ARemoteInfo['ip'] = $_SERVER['REMOTE_ADDR'];
+    $ARemoteInfo['hash_browser'] = md5($_SERVER["HTTP_USER_AGENT"]);
+
+    $agent_info = "_".$_SERVER['HTTP_USER_AGENT'];
+
+    // TODO: Uzupelnic info o systemach i przegladarkach.
+    $ASystem = [
+        'Windows 2000' => 'NT 5.0',
+        'Windows XP' => 'NT 5.1',
+        'Windows Vista' => 'NT 6.0',
+        'Windows 7' => 'NT 6.1',
+        'Windows 8' => 'NT 6.2',
+        'Linux' => 'Linux'
+    ];
+
+    $ABrowser = [
+        'Internet Explorer' => 'MSIE',
+        'Mozilla Firefox' => 'Firefox',
+        'Opera' => 'Opera',
+        'Chrome' => 'Chrome'
+    ];
+
+    foreach ($ASystem as $name => $ver) {
+      if (strpos($agent_info, $id)) {
+        $ARemoteInfo['system'];
+        break;
+      }
+    }
+
+    foreach ($ABrowser as $name => $tag) {
+      if (strpos($agent_info, $tag)) {
+        $ARemoteInfo['browser'] = $name;
+        break;
+      }
+    }
+
+    return $ARemoteInfo;
   }
 
   /**
@@ -49,15 +99,16 @@ class User
 
   public function hasIdentity()
   {
-    return $this->_OAuth->hasIdentity();
+    if (!empty($this->_AUserInfo)) {
+      return true;
+    }
+    return false;
   }
 
   public function authenticate($name, $password)
   {
     $db = Db::factory();
-    $OAdapter = new Zend_Auth_Adapter_DbTable($db, 'acl_user', 'name', 'password');
-    $OAdapter->setIdentity($name);
-    $OAdapter->setCredential($password);
+
     if (!$this->_OAuth->authenticate($OAdapter)) {
       Codi_Msg::addMsg('Niewłaściwa nazwa użytkownika lub hasło');
       return false;
@@ -84,7 +135,8 @@ class User
 
     $sql = $db->select()
               ->from('acl_user', 'COUNT(id)')
-              ->where('name = ?', array($name));
+              ->where('name = ?', array($name))
+              ->where('password = ?', array($password));
     $userExists = $db->fetchOne($sql);
 
     if ($userExists) {
@@ -123,7 +175,7 @@ class User
     try {
       $db->insert('acl_user', $AInput);
     }
-    catch (Zend_Db_Exception $e) {
+    catch (Exception $e) {
       Error::throwError('Nie powiodło się dodawanie użytkownika do bazy. ' . $e->getMessage());
     }
   }

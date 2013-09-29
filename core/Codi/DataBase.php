@@ -7,58 +7,50 @@
  * @author Filip Koblsnski
  */
 
-require_once 'Zend/Db/Adapter/Abstract.php';
-
 use Codi\Conf;
-use Zend\Db\Adapter as DbAdapter;
+use Zend\Db\Adapter\Adapter as DbAdapter;
 
 define('DB_CONF', 'core.db.');
 
 final class DataBase {
 
-  const DB_CONN_SECTION = 'codi.database';
-  const DB_ADAPTER      = 'adapter';
+  const MAIN_DB_CONFIG = 'main';
 
-  private static $ADbc = [];
+  private static $_ADbc = [];
 
   /**
-   * Returns the database handle based on configs
+   * Returns the database handle based on config.
    *
-   * @param mixed        the section in config ini file or array of configuration set
-   * @return Zend_Db_Adapter_Abstract
+   * @param  mixed           (optional)The section in config file or array of configuration set.
+   * @return Zend\Db\Adapter\Adapter
    */
   public static function factory($config = '')
   {
-     $ADbc = self::_getDbConfig($config);
+    self::_loadConfig();
 
-     $key = md5($ADbc['host'] . '_' . $ADbc['dbname']);
-
-    if (isset(self::$ADbc[$key]) && self::$ADbc[$key] instanceof DbAdapter) {
-      return self::$ADbc[$key];
+    if (empty($config)) {
+      $config = self::MAIN_DB_CONFIG;
     }
-
-    self::$ADbc[$key] = new DbAdapter($ADbc);
-
-    return self::$ADbc[$key];
-  }
-
-  private static function _getDbConfig($config)
-  {
-    $AConfig = [];
 
     if (is_array($config)) {
-      $AConfig = $config;
+      return new DbAdapter($config);
     }
-    elseif ($config === '') {
-      $AConfig = Conf::getSectionOptions(self::DB_CONN_SECTION);
+    elseif (isset(self::$_ADbc[$config])) {
+      return self::$_ADbc[$config];
     }
     else {
-      $AConfig = Conf::getSectionOptions($config);
+      Error::throwError('Nie istnieje konfiguracja bazy danych o nazwie: ' . $config);
     }
-
-    return $AConfig;
   }
 
+  private static function _loadConfig()
+  {
+    if (empty(self::$_ADbc)) {
+      $ADb = Conf::getConfig('database');
 
-
+      foreach ($ADb['connections'] as $connName => $ADbConfig) {
+        self::$_ADbc[$connName] = new DbAdapter($ADbConfig);
+      }
+    }
+  }
 }

@@ -36,4 +36,13 @@
 
 //if (is_array($Cos)) { echo 'ok'; }
 
-var_dump(is_numeric(false));
+//session_start();
+
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+session_start();
+//session_id('r38c2h2d23ntqefah6j1t44d75');
+
+//$_SESSION['test'] = 'test';
+
+var_dump(session_id(), md5('a'));

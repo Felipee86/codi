@@ -7,6 +7,7 @@
  * @author Filip Koblsnski
  */
 
+use Codi\DataBase as Dbi;
 use Codi\DataCase;
 use Codi\Error;
 use Codi\Loader;
