@@ -33,7 +33,8 @@ class User
 
     if (Session::getValue('user_name')) {
       $db = Db::factory();
-      $q = $db->select()->from('acl_user')
+      $db->OQb->select('name, email')
+              ->from('acl_user')
                 ->where('name                 = ?', Session::getValue('user_name'))
                 ->where('session_id           = ?', Session::getId())
                 ->where('session_ip           = ?', $this->_ARemoteInfo['ip'])

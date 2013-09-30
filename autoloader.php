@@ -1,4 +1,6 @@
 <?php
+require_once 'core/Doctrine/vendor/autoload.php';
+
 function loadCoreClass($className)
 {
   $path = CORE_PATH . DIRECTORY_SEPARATOR . str_replace("\\", "/", $className) . '.php';
