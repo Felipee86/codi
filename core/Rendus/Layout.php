@@ -5,8 +5,6 @@
  * @author Filip Koblsnski
  */
 
-require_once 'Rendus/Layout/Abstract.php';
-
 use Codi\Loader;
 use Codi\Error;
 use Rendus\Layout\LayoutAbstract;

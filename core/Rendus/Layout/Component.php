@@ -7,11 +7,8 @@
  * @author Filip Koblsnski
  */
 
-require_once 'Rendus/Layout/LayoutAbstract.php';
-
 use Codi\Error;
 use Rendus\Layout\LayoutAbstract;
-use Rendus\Layout\Component;
 
 class Component extends LayoutAbstract
 {

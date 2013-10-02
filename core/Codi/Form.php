@@ -7,7 +7,7 @@
  * @author Filip Koblsnski
  */
 
-use Codi\DataBase as Dbi;
+use Codi\DataBase as DDb;
 use Codi\Error;
 use Codi\Loader;
 
@@ -28,7 +28,7 @@ class Form
 
   private function _loadFormParams($id)
   {
-    $db = Dbi::factory();
+    $db = DDb::factory();
 
     $q = "SELECT
             name,
@@ -39,7 +39,7 @@ class Form
           WHERE
             id_codi_form = ?";
 
-    $AParams = $db->fetchRow($q, array($id));
+    $AParams = $db->getQueryRow($q, array($id));
 
     foreach ($AParams as $AParam) {
       $this->_AParams[$AParam['name']] = new Codi_Form_Param($AParam);
@@ -65,7 +65,7 @@ class Form
 
   public static function factory($identifier)
   {
-    $db = Dbi::factory();
+    $db = DDb::factory();
 
     $q = "SELECT
               id,
@@ -82,7 +82,7 @@ class Form
       $q .= "classname = ?";
     }
 
-    $AForm = $db->fetchRow($q, array($identifier));
+    $AForm = $db->getQueryRow($q, array($identifier));
 
     if (!empty($AForm['classname']) && Loader::loadClass($AForm['classname'])) {
       return new $AForm['classname']($AForm);

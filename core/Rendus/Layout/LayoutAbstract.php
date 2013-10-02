@@ -7,11 +7,11 @@
  * @author Filip Koblsnski
  */
 
-use Codi\DataBase as Dbi;
+use Codi\DataBase as DDb;
 use Codi\Error;
-use Codi\Loader;
 use Codi\Request;
 use Rendus\RendusInterface;
+use Rendus\Layout\Component;
 
 abstract class LayoutAbstract implements RendusInterface
 {
@@ -79,7 +79,7 @@ abstract class LayoutAbstract implements RendusInterface
 
   private function loadConfig()
   {
-    $db = Dbi::factory();
+    $db = DDb::factory();
 
     $q = "SELECT
             id,
@@ -90,7 +90,7 @@ abstract class LayoutAbstract implements RendusInterface
             rendus_layout
           WHERE
             classname = ?";
-    $AConfig = $db->fetchRow($q, array(get_class($this)));
+    $AConfig = $db->getQueryRow($q, array(get_class($this)));
 
     $this->id = $AConfig['id'];
     $this->name = get_class($this);
@@ -111,7 +111,7 @@ abstract class LayoutAbstract implements RendusInterface
 
   private function loadSockets()
   {
-    $db = Dbi::factory();
+    $db = DDb::factory();
 
     $q = "
           SELECT
@@ -125,15 +125,11 @@ abstract class LayoutAbstract implements RendusInterface
           WHERE
             rs.id_rendus_layout = ?
           ";
-    $ASockets = $db->fetchAll($q, array($this->id));
+    $ASockets = $db->getQueryAll($q, array($this->id));
 
     foreach ($ASockets as $ASocket) {
-      if (Loader::loadClass($ASocket['component_class'])) {
-        $this->setComponent($ASocket['name'], new $ASocket['component_class']);
-      }
-      else {
-        Error::throwError('Nie odnaleziono pliku z klasą');
-      }
+      $ASocket['component_class'] = "\\" . $ASocket['component_class'];
+      $this->setComponent($ASocket['name'], new $ASocket['component_class']);
     }
   }
 
@@ -162,7 +158,7 @@ abstract class LayoutAbstract implements RendusInterface
    * @param string $socket_key Socket name that component is being put to
    * @param Rendus_Layout_Component $OSocket Slready set component to add to the view
    */
-  public final function setComponent($socket_key, Rendus_Layout_Component $OSocket)
+  public final function setComponent($socket_key, Component $OSocket)
   {
     $key = $socket_key;
     if (strpos($socket_key, 'socket_') !== 0) {

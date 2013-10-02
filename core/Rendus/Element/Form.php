@@ -7,7 +7,7 @@
  * @author Filip Koblsnski
  */
 
-use Codi\DataBase as Dbi;
+use Codi\DataBase as DDb;
 use Codi\Error;
 use Codi\Loader;
 
@@ -16,8 +16,8 @@ class Form
 
   public static function factory($name)
   {
-    $db = Dbi::factory();
-
+    $db = DDb::factory();
+    
     $q = "SELECT
             id,
             classname,
@@ -27,7 +27,7 @@ class Form
           WHERE
             name = ?";
 
-    $AConfig = $db->fetchRow($q, array($name));
+    $AConfig = $db->getQueryRow($q, array($name));
 
     if (!empty($AConfig['classname']) && Loader::loadClass($AConfig['classname'])) {
       return new $AConfig['classname']($AConfig);

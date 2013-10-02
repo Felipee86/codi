@@ -7,9 +7,6 @@
  * @author Filip Koblsnski
  */
 
-require_once 'Rendus/Layout/Component.php';
-require_once 'Rendus/Element/Form.php';
-
 use Codi\User;
 use Rendus\Element\Form;
 use Rendus\Layout\Component;

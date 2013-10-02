@@ -150,10 +150,10 @@ class Controller extends ControllerAbstract {
               cc.id = cca.id_codi_controller
           JOIN
             " . LayoutAbstract::LAYOUT_TABLE . " rll ON
-              rll.id = default_layout_id_rendus_layout
+              rll.id = cca.default_layout_id_rendus_layout
           JOIN
             " . LayoutAbstract::LAYOUT_TABLE . " rlc ON
-              rlc.id = default_content_id_rendus_layout
+              rlc.id = cca.default_content_id_rendus_layout
           WHERE
             cc.module = ?
             AND cc.name = ?
@@ -161,7 +161,7 @@ class Controller extends ControllerAbstract {
           ";
 
     $db = DDb::factory();
-    $this->AConfig = $db->getQueryAll($q, array(
+    $this->AConfig = $db->getQueryRow($q, array(
         $this->module,
         $this->name,
         $this->action

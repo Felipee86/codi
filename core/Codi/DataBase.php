@@ -63,7 +63,25 @@ final class DataBase {
     $OStmt = $this->_getQuery($query, $ABind);
 
     // TODO:
-    return $OStmt->fetchAll(\PDO::FETCH_COLUMN);
+    return $OStmt->fetchAll(\PDO::FETCH_COLUMN, 0);
+  }
+
+  /**
+   * Executing the query and reciving first row of the resaults.
+   *
+   * @return array
+   */
+  public final function getQueryRow($query, array $ABind = [])
+  {
+    $OStmt = $this->_getQuery($query, $ABind);
+
+    if ($OStmt->rowCount() == 1) {
+      $AResults = $OStmt->fetchAll();
+      return $AResults[0];
+    }
+    else {
+      Error::throwError('Zapytanie powinno zwrocic tylko jeden rekord.');
+    }
   }
 
   /**
@@ -95,13 +113,16 @@ final class DataBase {
       foreach ($ABind as $param => $value) {
         if (is_numeric($param)) {
           ++$param;
+        }
+        if (is_numeric($value)) {
           $type = \PDO::PARAM_INT;
         }
-        $OStmt->bindParam($param, $value, $type);
+        $OStmt->bindValue($param, $value, $type);
       }
     }
 
     $OStmt->execute();
+
     return $OStmt;
   }
 

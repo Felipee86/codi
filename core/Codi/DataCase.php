@@ -7,7 +7,7 @@
  * @author Filip Koblsnski
  */
 
-use Codi\DataBase as Dbi;
+use Codi\DataBase as DDb;
 use Codi\DataCase;
 use Codi\Error;
 use Codi\Loader;
@@ -115,7 +115,7 @@ class DataCase
 
   private function _loadDataCase($id)
   {
-    $db = Dbi::factory();
+    $db = DDb::factory();
 
     $q = "SELECT
             id,
@@ -128,7 +128,7 @@ class DataCase
             codi_datacase_param
           WHERE
             id_codi_datacase = ?";
-    $AParams = $db->fetchAll($q, array($id));
+    $AParams = $db->getQueryAll($q, array($id));
 
     foreach($AParams as $AParam) {
       $ATmp = [
@@ -145,7 +145,7 @@ class DataCase
   public static function factory($identifier)
   {
     $ret = true;
-    $db = Dbi::factory();
+    $db = DDb::factory();
 
     if (is_numeric($identifier)) {
       $q = "SELECT
@@ -155,7 +155,7 @@ class DataCase
             WHERE
               id = ?";
       $id = $identifier;
-      $className = $db->fetchOne($q, array($id));
+      $className = $db->getQueryOne($q, array($id));
     }
     else {
       $q = "SELECT
@@ -164,7 +164,7 @@ class DataCase
               codi_datacase
             WHERE
               classname = ?";
-      $id  = $db->fetchOne($q, array($identifier));
+      $id  = $db->getQueryOne($q, array($identifier));
       $className = $identifier;
     }
 

@@ -7,8 +7,6 @@
  * @author Filip Koblsnski
  */
 
-require_once 'Rendus/Layout/Component.php';
-
 use Rendus\Layout\Component;
 
 class Footer extends Component
