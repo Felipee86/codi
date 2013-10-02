@@ -6,7 +6,7 @@ return [
 
     'connections' => [
         'main' => [
-            'driver'   => 'pdo_mysql',
+            'adapter'  => 'mysql',
             'host'     => 'localhost',
             'dbname'   => 'codi_system',
             'user'     => 'root',

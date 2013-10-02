@@ -26,21 +26,19 @@ final class DataBase {
    * Object of Doctrine entity manager.
    * @var Doctrine\ORM\EntityManager
    */
-  private $_OEm;
-
-  public $OQb;
+  private $_OPdo;
 
   private static $_ADbc = [];
-
-  private static $_ODoctrineConfig;
 
   private function __construct($connection)
   {
     $this->_connection = $connection;
 
     $AConfig = self::$_ADbc[$connection]['config'];
-    $this->_OEm = $this->_getEntityManager($AConfig);
-    $this->OQb = $this->_OEm->createQueryBuilder();
+
+    $conn = $AConfig['adapter'] . ':host=' . $AConfig['host'] . ';dbname=' . $AConfig['dbname'];
+
+    $this->_OPdo = new \PDO($conn, $AConfig['user'], $AConfig['password']);
   }
 
   /**
@@ -48,11 +46,24 @@ final class DataBase {
    *
    * @return array
    */
-  public final function getQueryAll()
+  public final function getQueryAll($query, array $ABind = [])
   {
-    $query = $this->OQb->getQuery();
+    $OStmt = $this->_getQuery($query, $ABind);
 
-    return $query->getResult();
+    return $OStmt->fetchAll();
+  }
+
+  /**
+   * Executing the query and reciving first column of the resaults.
+   *
+   * @return array
+   */
+  public final function getQueryCol($query, array $ABind = [])
+  {
+    $OStmt = $this->_getQuery($query, $ABind);
+
+    // TODO:
+    return $OStmt->fetchAll(\PDO::FETCH_COLUMN);
   }
 
   /**
@@ -60,11 +71,38 @@ final class DataBase {
    *
    * @return array
    */
-  public final function getQueryOne()
+  public final function getQueryOne($query, array $ABind = [])
   {
-    $query = $this->OQb->getQuery();
+    $OStmt = $this->_getQuery($query, $ABind);
 
-    return $query->getSingleResult();
+    if ($OStmt->rowCount() == 1 && $OStmt->columnCount() == 1) {
+      $AResults = $OStmt->fetchAll();
+      return $AResults[0][0];
+    }
+    else {
+      Error::throwError('Zapytanie powinno zwrocic tylko pojednyncza wartosc.');
+    }
+
+
+  }
+
+  private function _getQuery($query, array $ABind = [])
+  {
+    $type = \PDO::PARAM_STR;
+
+    $OStmt = $this->_OPdo->prepare($query);
+    if (!empty($ABind)) {
+      foreach ($ABind as $param => $value) {
+        if (is_numeric($param)) {
+          ++$param;
+          $type = \PDO::PARAM_INT;
+        }
+        $OStmt->bindParam($param, $value, $type);
+      }
+    }
+
+    $OStmt->execute();
+    return $OStmt;
   }
 
   /**
@@ -103,22 +141,10 @@ final class DataBase {
     }
   }
 
-  private function _getEntityManager($AConfig)
-  {
-    return EntityManager::create($AConfig, self::$_ODoctrineConfig);
-  }
-
   private static function _loadConfig()
   {
     if (empty(self::$_ADbc)) {
       $ADb = Conf::getConfig('database');
-
-      $ADoctrinConfigPath = [];
-      $AModulesDirs = File::getModulesDirs();
-      foreach ($AModulesDirs as $module => $moduleDir) {
-        $ADoctrinConfigPath[] = $moduleDir . DIRECTORY_SEPARATOR . 'entity';
-      }
-      self::$_ODoctrineConfig = Setup::createAnnotationMetadataConfiguration($ADoctrinConfigPath, $ADb['connections']['isDevMode']);
 
       foreach ($ADb['connections'] as $connName => $ADbConfig) {
         self::$_ADbc[$connName] = [];

@@ -10,7 +10,7 @@
 use Rendus\Html;
 use Rendus\Layout\LayoutAbstract;
 use Codi\Controller\ControllerAbstract;
-use Codi\DataBase as Dbi;
+use Codi\DataBase as DDb;
 use Codi\DataCase;
 use Codi\Error;
 use Codi\User;
@@ -25,7 +25,7 @@ class Controller extends ControllerAbstract {
 
   /**
    * Name of the controller
-   * @var string
+   * @var stringit
    */
   protected $name = '';
 
@@ -160,8 +160,8 @@ class Controller extends ControllerAbstract {
             AND cca.name = ?
           ";
 
-    $db = Dbi::factory();
-    $this->AConfig = $db->fetchRow($q, array(
+    $db = DDb::factory();
+    $this->AConfig = $db->getQueryAll($q, array(
         $this->module,
         $this->name,
         $this->action

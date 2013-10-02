@@ -1,5 +1,4 @@
 <?php
-require_once 'core/Doctrine/vendor/autoload.php';
 
 function loadCoreClass($className)
 {

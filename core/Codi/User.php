@@ -70,8 +70,8 @@ class User
     ];
 
     foreach ($ASystem as $name => $ver) {
-      if (strpos($agent_info, $id)) {
-        $ARemoteInfo['system'];
+      if (strpos($agent_info, $ver)) {
+        $ARemoteInfo['system'] = $name;
         break;
       }
     }
