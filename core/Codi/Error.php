@@ -7,6 +7,8 @@
  * @author Filip Koblsnski
  */
 
+use Codi\Exception;
+
 class Error
 {
 
@@ -36,8 +38,7 @@ class Error
     if (!empty(self::$AMsgs)) {
       header('Content-type: text/html');
       if ($_ENV['APPLICATION_ENV'] == 'development') {
-        echo '<pre>';
-        throw new \Exception(implode('<br />', self::$AMsgs));
+        throw new Exception(implode('<br />', self::$AMsgs));
       }
       else {
         foreach (self::$AMsgs as $msg) {
