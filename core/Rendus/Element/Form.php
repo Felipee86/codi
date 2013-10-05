@@ -9,7 +9,6 @@
 
 use Codi\DataBase as DDb;
 use Codi\Error;
-use Codi\Loader;
 
 class Form
 {
@@ -30,13 +29,13 @@ class Form
           FROM
             rendus_element_form ref
           JOIN
-            rendus_element re
+            rendus_element re ON re.id = ref.id_rendus_element
           WHERE
             re.name = ?";
 
     $AConfig = $db->getQueryRow($q, array($name));
 
-    if (!empty($AConfig['classname']) && Loader::loadClass($AConfig['classname'])) {
+    if (!empty($AConfig['classname'])) {
       $OElement = new $AConfig['classname']();
       if (!empty($AConfig['default_value'])) {
         $OElement->setValue($AConfig['default_value']);

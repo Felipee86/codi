@@ -21,7 +21,7 @@ class LoginPanel extends Component
   public function onInit()
   {
     $this->_loginInput    = Form::factory('input', 'Login');
-    $this->_passwordInput = Form::factory('password', 'Hasło');
+    $this->_passwordInput = Form::factory('password', 'Haslo');
     $this->_submitButton  = Form::factory('submit', 'Zaloguj');
 
     $this->setLabel('Panel logowania');

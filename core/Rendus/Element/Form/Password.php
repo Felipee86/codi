@@ -7,8 +7,6 @@
  * @author Filip Koblsnski
  */
 
-require_once 'Rendus/Element/ElementAbstract.php';
-
 use Rendus\Element\ElementAbstract;
 
 class Password extends ElementAbstract

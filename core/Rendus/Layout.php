@@ -5,8 +5,11 @@
  * @author Filip Koblsnski
  */
 
-use Codi\Loader;
+use Codi\Conf;
+use Codi\Controller;
+use Codi\DataBase as DDb;
 use Codi\Error;
+use Rendus\Layout\Content;
 use Rendus\Layout\LayoutAbstract;
 
 class Layout extends LayoutAbstract {
@@ -40,13 +43,15 @@ class Layout extends LayoutAbstract {
         'charset' => 'UTF-8',
     );
 
-    $ADefaultCss = Conf::getSectionOptions('codi.layout.css');
-    foreach ($ADefaultCss as $css) {
-      $this->addCss($css);
+    $ADefaultCss = Conf::getOption('layout.css');
+    if ($ADefaultCss) {
+      foreach ($ADefaultCss as $css) {
+        $this->addCss($css);
+      }
     }
 
     $this->title = '<no title>';
-    $title = Conf::getValue('codi.default.title');
+    $title = Conf::getOption('default.title');
     if ($title) {
       $this->title = $title;
     }
@@ -59,9 +64,11 @@ class Layout extends LayoutAbstract {
 
   private function _setContent()
   {
+    $db = DDb::factory();
+
     $q = "
           SELECT
-            rl.name
+            rl.classname
           FROM
             rendus_layout rl
           JOIN
@@ -69,10 +76,11 @@ class Layout extends LayoutAbstract {
               rl.id = cca.default_content_id_rendus_layout
           WHERE
             cca.id = ?
+            AND rl.type = 'content'
           ";
 
-    $content = $this->db->fetchOne($q, array(Codi_Controller::getActionId()));
-    if ($content && Loader::loadContent($content)) {
+    $content = $db->getQueryOne($q, array(Controller::getActionId()));
+    if ($content) {
       $this->setContent(new $content);
     }
     else {
@@ -175,7 +183,7 @@ class Layout extends LayoutAbstract {
    *
    * @param string $content (optional) Name of the specify content view.
    */
-  public final function setContent(Rendus_Layout_Content $OContent)
+  public final function setContent(Content $OContent)
   {
     $this->content = $OContent;
   }

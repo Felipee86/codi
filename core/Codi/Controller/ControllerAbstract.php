@@ -8,6 +8,7 @@
  */
 
 use Codi\DataBase as DDb;
+use Codi\Request;
 
 abstract class ControllerAbstract {
 
@@ -69,9 +70,9 @@ abstract class ControllerAbstract {
 
     $db = DDb::factory();
     $id = $db->getQueryOne($q, array(
-        Codi_Request::getModule(),
-        Codi_Request::getController(),
-        Codi_Request::getAction()
+        Request::getModule(),
+        Request::getController(),
+        Request::getAction()
     ));
 
     return $id;

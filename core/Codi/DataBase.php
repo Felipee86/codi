@@ -9,8 +9,6 @@
 
 use Codi\Conf;
 use Codi\File;
-use Doctrine\ORM\Tools\Setup;
-use Doctrine\ORM\EntityManager;
 
 final class DataBase {
 
@@ -100,8 +98,6 @@ final class DataBase {
     else {
       Error::throwError('Zapytanie powinno zwrocic tylko pojednyncza wartosc.');
     }
-
-
   }
 
   private function _getQuery($query, array $ABind = [])
@@ -130,7 +126,7 @@ final class DataBase {
    * Returns the database handle based on config.
    *
    * @param  mixed           (optional)The section in config file or array of configuration set.
-   * @return Zend\Db\Adapter\Adapter
+   * @return Codi\DataBase
    */
   public static function factory($config = '')
   {

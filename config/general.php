@@ -1,4 +1,13 @@
 <?php
 return [
-    'enviroment' => 'development'
+    'enviroment' => 'development',
+    'layout'     => [
+        'css' => [
+            'main.css',
+            'component.css'
+        ]
+    ],
+    'default' => [
+        'title' => 'CoDI Test'
+    ]
 ];
