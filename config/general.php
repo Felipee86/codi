@@ -1,6 +1,7 @@
 <?php
 return [
     'enviroment' => 'development',
+
     'layout'     => [
         'css' => [
             'main.css',
@@ -8,6 +9,7 @@ return [
         ]
     ],
     'default' => [
-        'title' => 'CoDI Test'
+        'title'    => 'CoDI Test',
+        'language' => 'pl'
     ]
 ];

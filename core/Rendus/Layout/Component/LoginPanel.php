@@ -8,21 +8,14 @@
  */
 
 use Codi\User;
-use Rendus\Element\Form;
 use Rendus\Layout\Component;
 
 class LoginPanel extends Component
 {
-  private $_loginInput;
-  private $_passwordInput;
-  private $_submitButton;
   private $_action;
 
   public function onInit()
   {
-    $this->_loginInput    = Form::factory('input', 'Login');
-    $this->_passwordInput = Form::factory('password', 'Haslo');
-    $this->_submitButton  = Form::factory('submit', 'Zaloguj');
 
     $this->setLabel('Panel logowania');
   }
@@ -44,20 +37,7 @@ class LoginPanel extends Component
       }
     }
     else {
-      $AContent = [
-          'form' => [
-              'attr' => [
-                  'method' => 'post',
-                  //TODO:
-                  'action' => '$this->getAction()'
-              ],
-              'content' => [
-                  $this->_loginInput->render(),
-                  $this->_passwordInput->render(),
-                  $this->_submitButton->render()
-              ]
-          ]
-      ];
+      //TODO: Formularz
     }
 
     $AHtml = [

@@ -11,7 +11,7 @@
  * @author fiko
  */
 
-use Rendus\Layout;
+use Rendus\Layout\Component;
 
 class Standard extends Component
 {

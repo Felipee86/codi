@@ -10,7 +10,6 @@
 use Codi\DataBase as DDb;
 use Codi\DataCase;
 use Codi\Form\Param;
-use Codi\Error;
 
 class Form
 {
@@ -81,7 +80,7 @@ class Form
     if (!is_null($this->_ODataCase) && !empty($AData)) {
       $this->_populateForm($AData);
     }
-    
+
   }
 
   private function _getElementMatrix()
@@ -94,9 +93,23 @@ class Form
 
   public final function render()
   {
+    $AForm = [];
+
+    $AForm = [
+        'form' => [
+            'attr' => [
+                'method' => 'post',
+                //TODO:
+                'action' => '$this->getAction()'
+            ],
+            'content' => []
+        ]
+    ];
     foreach($this->_AParams as $name => $param) {
-      $param->render();
+      $AForm['form']['content'][] = $param->render();
     }
+
+    return $AForm;
   }
 
   public static function factory($identifier)
@@ -109,13 +122,14 @@ class Form
               id_codi_datacase
             FROM
               codi_form
-            WHERE ";
+            WHERE
+              name = ?";
 
     if (is_numeric($identifier)) {
       $q .= "id = ?";
     }
     else {
-      $q .= "classname = ?";
+      $q .= "name = ?";
     }
 
     $AForm = $db->getQueryRow($q, array($identifier));

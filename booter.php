@@ -7,6 +7,8 @@ define('CONFIG_PATH', realpath(dirname(__FILE__)) . '/config');
 
 define('CORE_PATH', realpath(dirname(__FILE__)) . '/core');
 
+define('TRANSLATION_PATH', realpath(dirname(__FILE__)) . '/translation');
+
 define('HTML_PATH', realpath(dirname(__FILE__)) . '/public');
 
 defined('APPLICATION_ENV')

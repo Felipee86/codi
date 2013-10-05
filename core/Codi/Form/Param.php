@@ -43,7 +43,7 @@ class Param
 
   public final function render()
   {
-    $this->_OElement->render($AData);
+    return $this->_OElement->render($AData);
   }
 
   public final function getValue()
