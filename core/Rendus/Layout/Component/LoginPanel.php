@@ -12,11 +12,8 @@ use Rendus\Layout\Component;
 
 class LoginPanel extends Component
 {
-  private $_action;
-
   public function onInit()
   {
-
     $this->setLabel('Panel logowania');
   }
 
@@ -59,23 +56,4 @@ class LoginPanel extends Component
 
     return $AHtml;
   }
-
-  protected function onRender(array $AData) {
-    $user = User::getInstance();
-    $AData['is_logged_in'] = $user->hasIdentity();
-
-    $AData['login_panel_label'] = 'Panel logowania';
-    if ($AData['is_logged_in']) {
-      $AData['login_panel_label'] = 'Użytkownik';
-      $AData['user_name'] = $user->getName();
-    }
-
-    return $AData;
-  }
-
-  public final function setAction($module, $controller, $action)
-  {
-    $this->action = $module . '/' . $controller . '/' . $action;
-  }
-
 }

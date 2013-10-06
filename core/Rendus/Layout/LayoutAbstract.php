@@ -48,7 +48,11 @@ abstract class LayoutAbstract implements RendusInterface
    */
   protected $ASocket = [];
 
-  protected $_appPath = '';
+  /**
+   * Configurates layout around bounds.
+   * @var boolean
+   */
+  protected $bounds = true;
 
   /**
    * Does layout accepts the flash messages.

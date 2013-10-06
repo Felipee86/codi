@@ -8,7 +8,6 @@
  */
 
 use Codi\Conf;
-use Codi\File;
 
 final class DataBase {
 

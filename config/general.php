@@ -11,5 +11,8 @@ return [
     'default' => [
         'title'    => 'CoDI Test',
         'language' => 'pl'
+    ],
+    'logs' => [
+        'debug' => false
     ]
 ];

@@ -30,6 +30,14 @@ class Langus {
     return self::$_ATrans[$module];
   }
 
+  /**
+   * Prints the translation for a value key.
+   *
+   * @param string $value    Key for translation.
+   * @param string $modul    (optional) Module for searching in.
+   * @param string $context  (optional) The specify context.
+   * @return string
+   */
   public static function pr($value, $modul = '', $context = '')
   {
     if (empty($modul)) {
@@ -39,14 +47,19 @@ class Langus {
     $ALang = self::_getLang($module);
 
     $ARecursiveValue = explode('.', $value);
+
     if (count($ARecursiveValue) > 1) {
       if (isset($ALang[$ARecursiveValue[0]][$ARecursiveValue[1]])) {
         return $ALang[$ARecursiveValue[0]][$ARecursiveValue[1]];
       }
-      else {
-        return "^" . $value . "$";
+      elseif (!empty($context)) {
+        if (isset($ALang[$context][$value])) {
+          return $ALang[$context][$value];
+        }
+        else {
+          return "^" . $value . "$";
+        }
       }
-
     }
     if (isset($ALang[$value])) {
       return $ALang[$value];

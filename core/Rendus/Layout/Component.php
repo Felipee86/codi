@@ -7,21 +7,11 @@
  * @author Filip Koblsnski
  */
 
-use Codi\Error;
+use Codi\DataBase as DDb;
 use Rendus\Layout\LayoutAbstract;
 
 class Component extends LayoutAbstract
 {
-  const RENDUS_COMPONENT_PATH = '../application/codi/logic/Rendus/Layout/Component/';
-  const RENDUS_COMPONENT_CLASS = 'Component_';
-
-
-  /**
-   * Identifier of component.
-   * @var int
-   */
-  private $_componentId;
-
   /**
    * Name of the component.
    * @var string
@@ -45,32 +35,6 @@ class Component extends LayoutAbstract
    */
   protected function onInit() {}
 
-  /**
-   * Reciving id of the component object.
-   *
-   * @return int
-   */
-  public function getId()
-  {
-    return $this->_componentId;
-  }
-
-  /**
-   * Gets the absolute path to the component layout file.
-   *
-   * @param string $fileName Name of the component file.
-   * @param string (optional) $module Name of the component module.
-   * @return string
-   */
-  public static function getComponentPath($fileName, $module = 'codi')
-  {
-    $filePath = APPLICATION_PATH . '/' . strtolower($module) . '/rendus/component/' . $fileName . '.php';
-    if (file_exists($filePath)) {
-      return $filePath;
-    }
-    Error::throwError('Nie odnaleziono pliku componentu: ' . $filePath);
-  }
-
   public final function getLabel()
   {
     return (string)$this->getLabel();
@@ -89,21 +53,30 @@ class Component extends LayoutAbstract
   /**
    * Creating an instance of a Component class.
    *
-   * @param string $compName name of a component
+   * @param string $identifier name of a component
    * @return Rendus_Layout_Component
    */
-  public static function factory($compName)
+  public static function factory($identifier)
   {
-    $compName = str_replace('.php', '', $compName);
-    $path = self::RENDUS_COMPONENT_PATH . $compName . '.php';
+    $OComponent = null;
 
-    if (file_exists($path)) {
-      require_once $path;
-      $class = self::RENDUS_COMPONENT_CLASS . $compName;
-      $OComponent = new $class;
+    if (is_numeric($identifier)) {
+      $db = DDb::factory();
+
+      $q = "SELECT
+              classname
+            FROM
+              rendus_layout
+            WHERE
+              id = ?
+              AND type = 'component'";
+
+      $identifier = $db->getQueryOne($q, array($identifier));
     }
-    else {
-      Error::throwError("Element formularza ($type) nie istnieje.");
+
+    if ($identifier) {
+      $class = "\\" . $identifier;
+      $OComponent = new $class();
     }
 
     return $OComponent;

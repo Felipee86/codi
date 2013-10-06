@@ -35,6 +35,7 @@ class Layout extends LayoutAbstract {
   public function __construct()
   {
     parent::__construct();
+    $this->bounds = false;
 
     $this->_setContent();
 
