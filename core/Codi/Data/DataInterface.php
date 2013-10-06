@@ -11,6 +11,8 @@
  */
 interface DataInterface {
 
+  public function __constructor(array $AArgs);
+
   /**
    * Fetching all data.
    *
