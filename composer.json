@@ -1,5 +1,5 @@
 {
-	"name": "codi/codi",
+	"name": "codi/framework",
 	"description": "The Codi Framework.",
 	"keywords": ["framework", "codi", "cms"],
 	"license": "MIT",
@@ -7,14 +7,9 @@
 		"php": ">=5.4.0"
 	},
 	"autoload": {
-		"classmap": [
-			"app/commands",
-			"app/controllers",
-			"app/models",
-			"app/database/migrations",
-			"app/database/seeds",
-			"app/tests/TestCase.php"
-		]
+		"psr-0": {
+			"Codi\\" : "src/",
+    }
 	},
 	"scripts": {
 	},
