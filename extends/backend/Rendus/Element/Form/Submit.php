@@ -1,4 +1,6 @@
-<?php namespace Rendus\Element\Form;
+<?php
+
+namespace Rendus\Element\Form;
 
 /**
  * Class Input of
@@ -7,7 +9,7 @@
  * @author Filip Koblsnski
  */
 
-use Rendus\Element\ElementAbstract;
+use Rendus\ElementAbstract;
 
 class Submit extends ElementAbstract
 {

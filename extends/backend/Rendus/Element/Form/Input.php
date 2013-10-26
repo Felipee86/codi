@@ -7,7 +7,7 @@
  * @author Filip Koblsnski
  */
 
-use Rendus\Element\ElementAbstract;
+use Rendus\ElementAbstract;
 
 class Input extends ElementAbstract
 {

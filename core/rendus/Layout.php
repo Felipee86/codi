@@ -60,6 +60,9 @@ class Layout extends LayoutAbstract {
 
   protected function onRenderHtml($AData = [])
   {
+    $AData = [
+        
+    ];
     return [];
   }
 

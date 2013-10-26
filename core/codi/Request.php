@@ -169,4 +169,12 @@ class Request {
     return $AData;
   }
 
+  public static function getOptions()
+  {
+    if (!empty(self::$_AOptions)) {
+      return self::$_AOptions;
+    }
+    return null;
+  }
+
 }

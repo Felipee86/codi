@@ -88,7 +88,7 @@ class Controller extends ControllerAbstract {
       $this->$method();
     }
     else {
-      Error::throwError('Akcja ' . $this->action . ' nie istnieje!' );
+      Error::throwError('action_dosnt_exist', array($this->action));
     }
   }
 
@@ -98,17 +98,6 @@ class Controller extends ControllerAbstract {
   {
     echo "<!DOCTYPE html>";
     echo Html::parseHtmlArray($this->ORendus->render($this->ODataCase->getData()));
-  }
-
-  public final function isValidOptions(Array $AOptions)
-  {
-    $AOptions = $this->onValidOptions($AOptions);
-    return $AOptions;
-  }
-
-  protected function onValidOptions(Array $AOptions)
-  {
-    return $AOptions;
   }
 
   protected final function setContent($content)

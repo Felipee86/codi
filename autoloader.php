@@ -8,6 +8,14 @@ function loadCoreClass($className)
   }
 }
 
+function loadExtendClass($className)
+{
+  $path = EXTEND_PATH . DIRECTORY_SEPARATOR . 'backend' . DIRECTORY_SEPARATOR . str_replace("\\", "/", $className) . '.php';
+  if (file_exists($path)) {
+    require_once $path;
+  }
+}
+
 function loadControllerClass($className)
 {
   $AClass = explode("\\", $className);
@@ -48,6 +56,7 @@ function loadLayoutClass($className)
 }
 
 spl_autoload_register('loadCoreClass');
+spl_autoload_register('loadExtendClass');
 spl_autoload_register('loadControllerClass');
 spl_autoload_register('loadContentClass');
 spl_autoload_register('loadLayoutClass');

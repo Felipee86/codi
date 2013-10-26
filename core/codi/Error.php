@@ -29,7 +29,7 @@ class Error
     }
   }
 
-  public static function throwError($msg)
+  public static function throwError($msg, array $AParams = [])
   {
     if ($msg !== '') {
       self::addMsg($msg);
@@ -38,7 +38,9 @@ class Error
     if (!empty(self::$AMsgs)) {
       header('Content-type: text/html');
       if ($_ENV['APPLICATION_ENV'] == 'development') {
-        throw new Exception(implode('<br />', self::$AMsgs));
+        foreach(self::$AMsgs as $_msg) {
+          throw new Exception(Langus::pr('errors.' . $_msg, 'core', $AParams));
+        }
       }
       else {
         foreach (self::$AMsgs as $msg) {

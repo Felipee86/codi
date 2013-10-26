@@ -1,4 +1,6 @@
-<?php namespace Codi;
+<?php
+
+namespace Codi;
 
 /**
  * Class Lang of
@@ -7,7 +9,7 @@
  * @author Filip Koblsnski
  */
 
-use Codi\Request;
+use Codi\Conf;
 
 class Langus {
 
@@ -18,7 +20,7 @@ class Langus {
     if (!isset(self::$_ATrans[$module])) {
       //TODO: Obsługa języków z poziomu strony.
       $lang = Conf::getOption('default.lang');
-      $filename = TRANSLATION_PATH . DIRECTORY_SEPARATOR . $lang . DIRECTORY_SEPARATOR . $module . '.php';
+      $filename = APPLICATION_PATH . DIRECTORY_SEPARATOR . 'translation' . DIRECTORY_SEPARATOR . $lang . DIRECTORY_SEPARATOR . $module . '.php';
       if (file_exists($filename)) {
         self::$_ATrans[$module] = include $filename;
       }
@@ -38,34 +40,17 @@ class Langus {
    * @param string $context  (optional) The specify context.
    * @return string
    */
-  public static function pr($value, $modul = '', $context = '')
+  public static function pr($value)
   {
-    if (empty($modul)) {
-      $modul = Request::getModule();
-    }
-
-    $ALang = self::_getLang($module);
-
     $ARecursiveValue = explode('.', $value);
 
-    if (count($ARecursiveValue) > 1) {
-      if (isset($ALang[$ARecursiveValue[0]][$ARecursiveValue[1]])) {
-        return $ALang[$ARecursiveValue[0]][$ARecursiveValue[1]];
-      }
-      elseif (!empty($context)) {
-        if (isset($ALang[$context][$value])) {
-          return $ALang[$context][$value];
-        }
-        else {
-          return "^" . $value . "$";
-        }
-      }
-    }
-    if (isset($ALang[$value])) {
-      return $ALang[$value];
+    $ALang = self::_getLang($ARecursiveValue[0]);
+
+    if (isset($ALang[$ARecursiveValue[1]])) {
+      return $ALang[$ARecursiveValue[1]];
     }
     else {
-      return "^" . $value . "$";
+      return "^" . $ARecursiveValue[1] . "$";
     }
   }
 

@@ -1,4 +1,4 @@
-<?php namespace Codi;
+<?php namespace Servant;
 
 /**
  * Class File of
@@ -57,19 +57,4 @@ class File {
   {
     return APPLICATION_PATH . '/../' . slef::TMP_FILEPATH . DIRECTORY_SEPARATOR;
   }
-
-  public static function getModulesDirs()
-  {
-    $AModules = [];
-    $appPath  = APPLICATION_PATH . DIRECTORY_SEPARATOR;
-
-    $handle = opendir(realpath(CONFIG_PATH));
-    while (false !== ($moduleDir = readdir($handle))) {
-      if (is_dir($moduleDir)) {
-        $AModules[$moduleDir] = $appPath . $moduleDir;
-      }
-    }
-    return $AModules;
-  }
-
 }

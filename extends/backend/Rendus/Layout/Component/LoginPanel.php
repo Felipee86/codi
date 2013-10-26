@@ -7,7 +7,6 @@
  * @author Filip Koblsnski
  */
 
-use Codi\User;
 use Rendus\Layout\Component;
 
 class LoginPanel extends Component

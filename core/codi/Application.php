@@ -14,7 +14,6 @@ use Codi\Session;
 class Application {
 
   private $OFrontController = null;
-  private $AOptions = [];
 
   public function __construct()
   {
@@ -27,9 +26,13 @@ class Application {
             . ucfirst($REQUEST['FrontController']['controller'])
             . 'Controller';
 
-    $this->OFrontController = new $class($REQUEST['FrontController']['action']);
-
-    $this->AOptions = $REQUEST['Options'];
+    if (class_exists($class)) {
+      $this->OFrontController = new $class($REQUEST['FrontController']['action']);
+    }
+    else {
+      //TODO: zmienic na Redirect
+      Error::throwError('nie ma klasy kontrolera');
+    }
   }
 
   /**
@@ -37,8 +40,6 @@ class Application {
    */
   public function start()
   {
-    $this->OFrontController->isValidOptions($this->AOptions);
-
     $this->OFrontController->run();
 
     $this->OFrontController->render();

@@ -1,4 +1,6 @@
-<?php namespace Codi;
+<?php
+
+namespace Codi;
 
 /**
  * Class Conf of
@@ -34,14 +36,14 @@ final class Conf {
   private static function _loadConfig()
   {
     if (empty(self::$_AConf)) {
-      $handle = opendir(realpath(CONFIG_PATH));
+      $handle = opendir(realpath(APPLICATION_PATH . DIRECTORY_SEPARATOR . 'config'));
       while (false !== ($configFile = readdir($handle))) {
         $AFile = explode('.', $configFile);
         $ext = array_pop($AFile);
         $configName = implode('.', $AFile);
 
         if ($ext == 'php' && !is_dir($configFile)) {
-          $configPath = CONFIG_PATH . DIRECTORY_SEPARATOR . $configFile;
+          $configPath = APPLICATION_PATH . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . $configFile;
 
           self::$_AConf[$configName] = require $configPath;
         }

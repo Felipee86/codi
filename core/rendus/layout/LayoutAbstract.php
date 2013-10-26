@@ -60,9 +60,9 @@ abstract class LayoutAbstract implements RendusInterface
    */
   protected $flashMsg = false;
 
-  public function __construct()
+  public function __construct($id)
   {
-    $this->loadConfig();
+    $this->loadConfig($id);
     $this->loadSockets();
   }
 
@@ -73,31 +73,32 @@ abstract class LayoutAbstract implements RendusInterface
    */
   public final function render(array $AData = [])
   {
-    $AHtml = $this->onRenderHtml($AData);
-    if (!is_array($AHtml)) {
-      Error::throwError('Metoda onRenderHtml musi zwracac tablice');
+    $AData = $this->onRenderHtml($AData);
+    if (!is_array($AData)) {
+      Error::throwError('method_onRenderHtml_have_to_return_array');
     }
 
-    return $AHtml;
+    return $AData;
   }
 
-  private function loadConfig()
+  private function loadConfig($id)
   {
     $db = DDb::factory();
 
     $q = "SELECT
             id,
+            template_path,
             module,
             css_files,
             js_files
           FROM
             rendus_layout
           WHERE
-            classname = ?";
-    $AConfig = $db->getQueryRow($q, array(get_class($this)));
+            id = ?";
+    $AConfig = $db->getQueryRow($q, array($id));
 
     $this->id = $AConfig['id'];
-    $this->name = get_class($this);
+    $this->template_path = str_replace('.', DIRECTORY_SEPARATOR, $AConfig['template_path']);
     $this->module = $AConfig['module'];
     if (!empty($AConfig['css_files'])) {
       $ACss = explode(';', $AConfig['css_files']);

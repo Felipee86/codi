@@ -1,4 +1,4 @@
-<?php namespace Codi\DataCase;
+<?php namespace Builder;
 
 /**
  * Class Builder of

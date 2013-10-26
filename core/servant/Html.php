@@ -1,4 +1,4 @@
-<?php namespace Rendus;
+<?php namespace Servant;
 
 /**
  * Class Html of
