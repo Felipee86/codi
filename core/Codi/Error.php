@@ -8,6 +8,7 @@
  */
 
 use Codi\Exception;
+use Codi\Log;
 
 class Error
 {
@@ -44,7 +45,7 @@ class Error
       }
       else {
         foreach (self::$AMsgs as $msg) {
-          echo $msg . '<br />';
+          Log::addEntry($msg);
         }
         echo 'RENDUS FAILED';
 

@@ -3,8 +3,6 @@
 defined('APPLICATION_PATH')
   || define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/application'));
 
-define('CORE_PATH', realpath(dirname(__FILE__)) . '/core');
-
 define('EXTEND_PATH', realpath(dirname(__FILE__)) . '/extend');
 
 define('HTML_PATH', realpath(dirname(__FILE__)) . '/public');

@@ -17,7 +17,7 @@ class Log {
   const LOG_LEVEL_ERROR   = 4;
 
 
-  public static function addEntry($msg, $level)
+  public static function addEntry($msg, $level = self::LOG_LEVEL_ERROR)
   {
     $filePath = realpath(dirname(__FILE__)) . DIRECTORY_SEPARATOR
                 . '_files' . DIRECTORY_SEPARATOR

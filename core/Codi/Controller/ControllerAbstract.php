@@ -1,4 +1,6 @@
-<?php namespace Codi\Controller;
+<?php
+
+namespace Codi\Controller;
 
 /**
  * Class Abstract of
