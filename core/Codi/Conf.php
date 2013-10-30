@@ -10,6 +10,7 @@ namespace Codi;
  */
 
 use Codi\Error;
+use Codi\Modular;
 
 final class Conf {
 
@@ -37,18 +38,36 @@ final class Conf {
   {
     if (empty(self::$_AConf)) {
       $handle = opendir(realpath(APPLICATION_PATH . DIRECTORY_SEPARATOR . 'config'));
-      while (false !== ($configFile = readdir($handle))) {
-        $AFile = explode('.', $configFile);
-        $ext = array_pop($AFile);
-        $configName = implode('.', $AFile);
+      self::_addConfigDir($handle);
 
-        if ($ext == 'php' && !is_dir($configFile)) {
-          $configPath = APPLICATION_PATH . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . $configFile;
+      foreach (Modular::getList() as $module) {
+        $module_path = opendir(realpath(APPLICATION_PATH . '/Modules/' . $module . DIRECTORY_SEPARATOR . 'config'));
+        self::_addConfigDir($module_path, $module);
+      }
 
+      self::$_AConfFlattern = self::_flatternConfig();
+    }
+  }
+
+  private static function _addConfigDir($dir, $module = '') {
+    while (false !== ($configFile = readdir($dir))) {
+      $AFile = explode('.', $configFile);
+      $ext = array_pop($AFile);
+      $configName = implode('.', $AFile);
+
+      if ($ext == 'php' && !is_dir($configFile)) {
+        $configPath = APPLICATION_PATH . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . $configFile;
+
+        if (!empty($module)) {
+          if (!isset(self::$_AConf[$module])) {
+            self::$_AConf[$module] = [];
+          }
+          self::$_AConf[$module][$configName] = require $configPath;
+        }
+        else {
           self::$_AConf[$configName] = require $configPath;
         }
       }
-      self::$_AConfFlattern = self::_flatternConfig();
     }
   }
 
@@ -68,6 +87,8 @@ final class Conf {
 
   private static function _flatternConfig($AConfig = null, $_key = '')
   {
+    // TODO: Opcja z cachowaniem
+
     $_AFlat = [];
     if (!empty($_key)) {
       $_key .= '.';

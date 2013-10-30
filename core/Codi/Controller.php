@@ -85,7 +85,7 @@ class Controller extends ControllerAbstract {
     if (method_exists($this, $method)) {
       $this->init();
 
-      $this->$method();
+      call_user_func_array([$this, $method], Request::getOptions());
     }
     else {
       Error::throwError('action_dosnt_exist', array($this->action));

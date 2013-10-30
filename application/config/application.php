@@ -1,15 +1,10 @@
 <?php
+
 return [
     /**
      * The setting of the enviroment that application run in.
      */
     'enviroment' => 'development',
-
-    /**
-     * If the directory structure is straight or modular.
-     * TODO:
-     */
-    'modular' => false,
 
     /**
      * If layout isn't set then take this information from here.
@@ -34,7 +29,7 @@ return [
         /**
          * If application don't support the browser language then take it from here.
          */
-        'language' => 'pl'
+        'language' => 'pl',
     ],
 
     /**
@@ -47,5 +42,5 @@ return [
          * prodaction enviroment.
          */
         'debug' => false
-    ]
+    ],
 ];

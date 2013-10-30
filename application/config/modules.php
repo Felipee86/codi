@@ -1,5 +1,7 @@
 <?php
 
 return [
-    'main' => 'Main module'
+    'main' => [
+        'title' => 'Main module',
+    ]
 ];

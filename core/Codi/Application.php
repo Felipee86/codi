@@ -19,20 +19,9 @@ class Application {
   {
     Session::start();
 
-    $REQUEST = Request::getRequestData();
+    $router = Request::getRequestRouter();
 
-    $class = ucfirst($REQUEST['FrontController']['module'])
-            . '\\'
-            . ucfirst($REQUEST['FrontController']['controller'])
-            . 'Controller';
-
-    if (class_exists($class)) {
-      $this->OFrontController = new $class($REQUEST['FrontController']['action']);
-    }
-    else {
-      //TODO: zmienic na Redirect
-      Error::throwError('nie ma klasy kontrolera');
-    }
+    $this->OFrontController = $router->reciveController();
   }
 
   /**
