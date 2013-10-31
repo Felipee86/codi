@@ -10,7 +10,6 @@ namespace Codi;
  */
 
 use Codi\Error;
-use Codi\Modular;
 
 final class Conf {
 

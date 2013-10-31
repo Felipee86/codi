@@ -69,7 +69,7 @@ class Request {
         self::$_AFront[array_shift($AElements)] = ($req ? ucfirst(strtolower($req)) : null);
       }
 
-      self::$_AFront = self::getRoute(self::_AFront);
+      self::$_AFront = self::getRoute(self::$_AFront);
 
       while ($ARequest) {
         self::$_AOptions[] = array_shift($ARequest);
