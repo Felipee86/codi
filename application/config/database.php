@@ -1,9 +1,5 @@
 <?php
 return [
-    'Doctrine' => [
-        'isDevMode' => false
-    ],
-
     'connections' => [
         'main' => [
             'adapter'  => 'mysql',

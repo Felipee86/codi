@@ -40,9 +40,11 @@ final class Conf {
       $handle = opendir(realpath(APPLICATION_PATH . DIRECTORY_SEPARATOR . 'config'));
       self::_addConfigDir($handle);
 
-      foreach (Modular::getList() as $module) {
+      foreach (array_keys(self::$_AConf['modules']) as $module) {
         $module_path = opendir(realpath(APPLICATION_PATH . '/Modules/' . $module . DIRECTORY_SEPARATOR . 'config'));
-        self::_addConfigDir($module_path, $module);
+        if (is_dir($module_path)) {
+          self::_addConfigDir($module_path, $module);
+        }
       }
 
       self::$_AConfFlattern = self::_flatternConfig();

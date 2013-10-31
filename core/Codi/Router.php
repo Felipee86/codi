@@ -4,6 +4,7 @@ namespace Codi;
 
 use Codi\Conf;
 use Codi\Error;
+use Codi\Request;
 
 final class Router {
 
@@ -52,11 +53,29 @@ final class Router {
     return self::$ARegister[$route];
   }
 
+  /**
+   * Gets the instance of Codi\Router based on route.
+   *
+   * @param string $route Route in format module#action(at)controller
+   * @return \Codi\Router
+   */
   public static function get($route = '') {
     if (empty($route)) {
       $route = 'default';
     }
     return self::_registry($route);
+  }
+
+  public static function link($route, $AOptions = []) {
+    $route = self::get($route);
+
+    $url = $_SERVER['HTTP_HOST'] . '/' . $route->getModule() . '/' . $route->getController() . '/' . $route->getAction();
+
+    foreach($AOptions as $option) {
+      $url .= '/' . $option;
+    }
+
+    return $url;
   }
 
   public function getModule() {
@@ -82,7 +101,12 @@ final class Router {
     if (class_exists($className)) {
       $OController = new $className;
       if (method_exists($OController, $this->_action)) {
-        return $OController;
+        $reflection = new \ReflectionMethod($OController, $this->_action);
+
+        if (count(Request::getOptions()) >= $reflection->getNumberOfRequiredParameters()) {
+          return $OController;
+        }
+        Error::throwError('Nie przekazano wszystkich wymaganych parametrów');
       }
       Error::throwError('Akcja: ' . $this->_action . ' nie istnieje.');
     }

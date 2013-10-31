@@ -81,7 +81,7 @@ class Controller extends ControllerAbstract {
       $this->ORendus = new $this->AConfig['layout_class'];
     }
 
-    $method = $this->action . 'Action';
+    $method = $this->action;
     if (method_exists($this, $method)) {
       $this->init();
 

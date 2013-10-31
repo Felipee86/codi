@@ -69,10 +69,22 @@ class Request {
         self::$_AFront[array_shift($AElements)] = ($req ? ucfirst(strtolower($req)) : null);
       }
 
+      self::$_AFront = self::getRoute(self::_AFront);
+
       while ($ARequest) {
         self::$_AOptions[] = array_shift($ARequest);
       }
     }
+  }
+
+  private static function getRoute($AFront) {
+    $route = $AFront['module'] . '#' . $AFront['action'] . '@' . $AFront['controller'];
+    $router = Router::get($route);
+    return [
+        'module'     => $router->getModule(),
+        'controller' => $router->getController(),
+        'action'     => $router->getAction(),
+    ];
   }
 
   public static function getRequestRouter()

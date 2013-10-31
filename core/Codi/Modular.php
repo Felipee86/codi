@@ -16,15 +16,13 @@ use Codi\Conf;
  */
 final class Modular {
 
-  const APP_DIR_NAME = '/application/modules/';
+  const APP_DIR_NAME = '/Modules/';
 
   const DEFAULT_CONTROLLER = 'home';
 
   const DEFAULT_ACTION = 'index';
 
   private static $_AModules = [];
-
-  private static $_ASettings = [];
 
   private $_name = '';
 
@@ -37,15 +35,7 @@ final class Modular {
 
   private static function _loadModules() {
     if (empty(self::$_AModules)) {
-      $dir = realpath(dirname(__FILE__)) . self::APP_DIR_NAME;
-
-      while (false !== ($moduleDir = readdir($dir))) {
-        if (is_dir($dir . $moduleDir)) {
-          self::$_AModules[$moduleDir] = [];
-        }
-      }
-
-      self::$_ASettings = Conf::getConfig('modules');
+      self::$_AModules = Conf::getConfig('modules');
     }
   }
 
