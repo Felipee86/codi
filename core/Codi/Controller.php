@@ -9,31 +9,13 @@
 
 use Rendus\Html;
 use Rendus\Layout\LayoutAbstract;
+use Codi\Conf;
 use Codi\Controller\ControllerAbstract;
 use Codi\DataBase as DDb;
 use Codi\DataCase;
 use Codi\Error;
-use Codi\User;
 
 class Controller extends ControllerAbstract {
-
-  /**
-   * Name of the controller action
-   * @var string
-   */
-  protected $action = 'index';
-
-  /**
-   * Name of the controller
-   * @var stringit
-   */
-  protected $name = '';
-
-  /**
-   * Name of the controller module
-   * @var string
-   */
-  protected $module = '';
 
   /**
    * Rendus object
@@ -42,38 +24,10 @@ class Controller extends ControllerAbstract {
   protected $ORendus = null;
 
   /**
-   * Is controller in ajax mode
-   * @var boolean
-   */
-  private $ajax = false;
-
-  /**
    * Does controller gonna have view
    * @var boolean
    */
   private $isRendus = true;
-
-  public function __construct($action = 'index')
-  {
-    $this->_loadUser();
-
-    if (strpos($action, 'ajax') === 0) {
-      $this->ajax = true;
-    }
-    $this->action = $action;
-    $this->module = Request::getModule();
-    $this->name   = Request::getController();
-
-    $this->_loadConfig();
-    $this->_loadDataCase();
-  }
-
-  protected final function init()
-  {
-    $this->onInit();
-  }
-
-  protected function onInit() {}
 
   public final function run()
   {
@@ -81,22 +35,21 @@ class Controller extends ControllerAbstract {
       $this->ORendus = new $this->AConfig['layout_class'];
     }
 
-    $method = $this->action;
-    if (method_exists($this, $method)) {
-      $this->init();
-
-      call_user_func_array([$this, $method], Request::getOptions());
+    if (method_exists($this, $this->action)) {
+      call_user_func_array([$this, $this->action], Request::getOptions());
     }
     else {
       Error::throwError('action_dosnt_exist', array($this->action));
     }
   }
 
-  protected function indexAction() {}
+  protected function indexAction() {
+    return;
+  }
 
   public final function render()
   {
-    echo "<!DOCTYPE html>";
+    echo Conf::getConfig('application.doctype-header');
     echo Html::parseHtmlArray($this->ORendus->render($this->ODataCase->getData()));
   }
 
@@ -112,16 +65,6 @@ class Controller extends ControllerAbstract {
   {
     $this->isRendus = false;
     $this->ORendus = null;
-  }
-
-  private function _loadUser()
-  {
-     $OUser = User::getInstance();
-     if (!$OUser->hasIdentity()) {
-       $OUser = null;
-     }
-
-    $this->OUser = $OUser;
   }
 
   private function _loadConfig()

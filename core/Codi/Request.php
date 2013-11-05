@@ -69,7 +69,7 @@ class Request {
         self::$_AFront[array_shift($AElements)] = ($req ? ucfirst(strtolower($req)) : null);
       }
 
-      self::$_AFront = self::getRoute(self::$_AFront);
+      self::$_AFront = self::_getRoute(self::$_AFront);
 
       while ($ARequest) {
         self::$_AOptions[] = array_shift($ARequest);
@@ -77,7 +77,7 @@ class Request {
     }
   }
 
-  private static function getRoute($AFront) {
+  private static function _getRoute($AFront) {
     $route = $AFront['module'] . '#' . $AFront['action'] . '@' . $AFront['controller'];
     $router = Router::get($route);
     return [

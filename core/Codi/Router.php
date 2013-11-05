@@ -104,6 +104,8 @@ final class Router {
         $reflection = new \ReflectionMethod($OController, $this->_action);
 
         if (count(Request::getOptions()) >= $reflection->getNumberOfRequiredParameters()) {
+          $OController->setAction($this->action);
+
           return $OController;
         }
         Error::throwError('Nie przekazano wszystkich wymaganych parametrów');

@@ -17,22 +17,18 @@ abstract class ControllerAbstract {
   const CONTROLLER_TABLE = 'codi_controller';
   const CONTROLLER_ACTION_TABLE = 'codi_controller_action';
 
-  protected $OUser = null;
-
   protected $AConfig = [];
 
   protected $ODataCase = null;
+
+  protected $action = '';
+
 
   /**
    * Database adapter handler
    * @var Zend\Db\Adapter\Adapter
    */
   protected $db;
-
-  /**
-   * This method is call when the object is creating.
-   */
-  abstract protected function init();
 
   /**
    * Runs the controller.
@@ -54,6 +50,22 @@ abstract class ControllerAbstract {
    * This function is running while controller is finishing the respone.
    */
   public function onClose() {}
+
+  public function setAction($action) {
+    $this->action = $action;
+  }
+
+  public function getAction() {
+    return $this->action;
+  }
+
+  public function getModule() {
+    return array_shift(explode('\\', get_class($this)));
+  }
+
+  public function getName() {
+    return array_pop(explode('\\', get_class($this)));
+  }
 
   public static function getActionId()
   {

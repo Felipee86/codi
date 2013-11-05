@@ -43,4 +43,6 @@ return [
          */
         'debug' => false
     ],
+
+    'doctype-header' => '<!DOCTYPE html>'
 ];
