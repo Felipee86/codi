@@ -1,4 +1,6 @@
-<?php namespace Codi;
+<?php
+
+namespace Codi;
 
 /**
  * Class Codi_Application of
@@ -15,6 +17,8 @@ class Application {
 
   private $OFrontController = null;
 
+  private $closeCallback;
+
   public function __construct()
   {
     Session::start();
@@ -27,19 +31,35 @@ class Application {
   /**
    * Set and run the application action controller.
    */
-  public function start()
+  public final function start()
   {
-    $this->OFrontController->run();
+    $content = $this->OFrontController->run();
 
-    $this->OFrontController->render();
+    $this->render($content);
   }
+
+  public final function close()
+  {
+    if (is_callable($this->closeCallback)) {
+      call_user_method('closeCallback', $this);
+    }
+  }
+
+  /**
+   * Renders the view.
+   */
+  public final function render($content = '')
+  {
+    echo Conf::getConfig('application.doctype-header');
+  }
+
+  
 
   /**
    * Method to run on finishing the application screen
    */
-  public function onFinish()
+  public function onFinish(callable $callback)
   {
-    $this->OFrontController->onClose();
-//    Error::throwError('END');
+    $this->closeCallback = $callback;
   }
 }

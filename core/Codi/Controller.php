@@ -1,4 +1,6 @@
-<?php namespace Codi;
+<?php
+
+namespace Codi;
 
 /**
  * Class Controller of
@@ -7,7 +9,6 @@
  * @author Filip Koblsnski
  */
 
-use Rendus\Html;
 use Rendus\Layout\LayoutAbstract;
 use Codi\Conf;
 use Codi\Controller\ControllerAbstract;
@@ -23,34 +24,20 @@ class Controller extends ControllerAbstract {
    */
   protected $ORendus = null;
 
-  /**
-   * Does controller gonna have view
-   * @var boolean
-   */
-  private $isRendus = true;
-
   public final function run()
   {
-    if ($this->isRendus) {
-      $this->ORendus = new $this->AConfig['layout_class'];
-    }
+    $this->ORendus = new $this->AConfig['layout_class'];
 
     if (method_exists($this, $this->action)) {
-      call_user_func_array([$this, $this->action], Request::getOptions());
+      return call_user_func_array([$this, $this->action], Request::getOptions());
     }
     else {
       Error::throwError('action_dosnt_exist', array($this->action));
     }
   }
 
-  protected function indexAction() {
+  protected function index() {
     return;
-  }
-
-  public final function render()
-  {
-    echo Conf::getConfig('application.doctype-header');
-    echo Html::parseHtmlArray($this->ORendus->render($this->ODataCase->getData()));
   }
 
   protected final function setContent($content)
@@ -59,12 +46,6 @@ class Controller extends ControllerAbstract {
     $OContent = new $class();
 
     $this->ORendus->setContent($OContent);
-  }
-
-  public function setNoRendus()
-  {
-    $this->isRendus = false;
-    $this->ORendus = null;
   }
 
   private function _loadConfig()
